@@ -47,6 +47,7 @@ public class ForgotPassword extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
+        erreurDialog.setTitle("Erreur");
         erreurDialog.setPreferredSize(new java.awt.Dimension(581, 77));
         erreurDialog.setSize(new java.awt.Dimension(581, 77));
 
@@ -64,7 +65,7 @@ public class ForgotPassword extends javax.swing.JFrame {
             .addGroup(erreurDialogLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(errorDialogText, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);

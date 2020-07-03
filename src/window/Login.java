@@ -210,7 +210,7 @@ public class Login extends javax.swing.JFrame {
                         //show Responsable
                         break;
                     case "Agent":
-                        //show Agent
+                        new AgentWindow().setVisible(true);
                         break;
                     case "Directeur":
                         //show Directeur

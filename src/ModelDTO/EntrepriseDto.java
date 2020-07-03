@@ -10,7 +10,7 @@ package ModelDTO;
  * @author morga
  */
 public class EntrepriseDto {
-    int siret;
+    long siret;
     String raisonSociale;
     int numAdresse;
     String rueAdresse;
@@ -19,7 +19,7 @@ public class EntrepriseDto {
     int telephone;
     String contact;
 
-    public EntrepriseDto(int siret, String raisonSociale, int numAdresse, String rueAdresse, String ville, int codePostal, int telephone, String contact) {
+    public EntrepriseDto(long siret, String raisonSociale, int numAdresse, String rueAdresse, String ville, int codePostal, int telephone, String contact) {
         this.siret = siret;
         this.raisonSociale = raisonSociale;
         this.numAdresse = numAdresse;
@@ -30,7 +30,7 @@ public class EntrepriseDto {
         this.contact = contact;
     }
 
-    public int getSiret() {
+    public long getSiret() {
         return siret;
     }
 
