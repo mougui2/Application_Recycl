@@ -200,7 +200,7 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
-    private void goToHomePage(EmployeDto employe) {/*
+    private void goToHomePage(EmployeDto employe) {
         FonctionDto _fonction = employe.getFonction();
         switch (_fonction.getLibelle()) {
                     case "Employe":
@@ -215,7 +215,7 @@ public class Login extends javax.swing.JFrame {
                     case "Directeur":
                         //show Directeur
                         break;
-        }*/
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonConnecter;
