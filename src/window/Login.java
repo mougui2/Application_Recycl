@@ -5,8 +5,6 @@
  */
 package window;
 
-import ModelDTO.EmployeDto;
-import ModelDTO.FonctionDto;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -17,7 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import services.AuthServices;
 
 /**
  *
@@ -41,8 +38,6 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dialogError = new javax.swing.JDialog();
-        errorDialogText = new javax.swing.JLabel();
         pannelLogin = new javax.swing.JPanel();
         textfieldLogin = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -50,25 +45,7 @@ public class Login extends javax.swing.JFrame {
         textfieldPwd = new javax.swing.JTextField();
         buttonConnecter = new javax.swing.JButton();
 
-        dialogError.setTitle("Error");
-        dialogError.setSize(new java.awt.Dimension(581, 146));
-
-        javax.swing.GroupLayout dialogErrorLayout = new javax.swing.GroupLayout(dialogError.getContentPane());
-        dialogError.getContentPane().setLayout(dialogErrorLayout);
-        dialogErrorLayout.setHorizontalGroup(
-            dialogErrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dialogErrorLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(errorDialogText, javax.swing.GroupLayout.PREFERRED_SIZE, 486, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(60, Short.MAX_VALUE))
-        );
-        dialogErrorLayout.setVerticalGroup(
-            dialogErrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(errorDialogText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(new java.awt.Dimension(400, 300));
 
         pannelLogin.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -135,31 +112,87 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonConnecterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConnecterActionPerformed
+        HttpURLConnection connection = null;
+        Map<String, String> roles = new HashMap<>();
+        roles.put("E", "Employe");
+        roles.put("R", "Responsable");
+        roles.put("A", "Agent");
+        roles.put("N", "PDG");
+        roles.put("M", "RH");//M pour N-1 ;-)
+
         //reset default parameter
-        errorDialogText.setText("");
         textfieldLogin.setBackground(Color.WHITE);
         textfieldPwd.setBackground(Color.WHITE);
-        //check error
-        if (textfieldLogin.getText().equals("")) {
+
+        // Recover user data
+        String login = textfieldLogin.getText();
+        String pwd = textfieldPwd.getText();
+
+        // Send data to the backend
+        try {
+            // Create connection
+            URL url = new URL("");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded");
+
+            // Send request
+            DataOutputStream wr = new DataOutputStream(
+                connection.getOutputStream());
+            wr.writeBytes("login=" + login + "&pwd=" + pwd);
+            wr.flush();
+            wr.close();
+
+            // Get response
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            String line;
+            StringBuffer response = new StringBuffer();
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            String res = response.toString();
+
+            // Print response
+            System.out.println("reponse :\r" + res);
+
+            // Recover code
+            if (true) {
+                // If code 200 recover role with the first letter of login
+                String letter = login.substring(0, 1);
+                String role = roles.get(letter);
+                //Hide and Show the right pannel"Employe");
+            pannelLogin.setVisible(false);
+            switch(role) {
+                case "Employe":
+                //show employePannel
+                break;
+                case "Responsable":
+                //show responsablePannel
+                break;
+                case "Agent":
+                //show agentPannel
+                break;
+                case "PDG":
+                //show pdgPannel
+                break;
+                case "RH":
+                //show rhPannel
+                break;
+            }
+        } else {
+            //else show error
             textfieldLogin.setBackground(Color.red);
-        }
-        if (textfieldPwd.getText().equals("")) {
             textfieldPwd.setBackground(Color.red);
         }
-        if (!textfieldLogin.getText().equals("") && !textfieldPwd.getText().equals("")) {
-            AuthServices service = new AuthServices();
-            EmployeDto employe = service.login(textfieldLogin.getText(), textfieldPwd.getText(), errorDialogText);
-            if (employe != null && employe.getMotDePasse().equals(employe.getLogin())) {
-                new ForgotPassword(employe.getId()).setVisible(true);
-                textfieldLogin.setText("");
-                textfieldPwd.setText("");
-            } else if (employe != null) {
-                goToHomePage(employe);
-            }
+        } catch (IOException e) {
         }
-        if (!errorDialogText.getText().equals("")) {
-            dialogError.setVisible(true);
-        }
+
+        textfieldLogin.setText(textfieldLogin.getBackground().toString());
+        //pannelLogin.setVisible(false);
     }//GEN-LAST:event_buttonConnecterActionPerformed
 
     /**
@@ -200,27 +233,8 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
-    private void goToHomePage(EmployeDto employe) {
-        FonctionDto _fonction = employe.getFonction();
-        switch (_fonction.getLibelle()) {
-                    case "Employe":
-                        //show Employe
-                        break;
-                    case "Responsable":
-                        //show Responsable
-                        break;
-                    case "Agent":
-                        //show Agent
-                        break;
-                    case "Directeur":
-                        //show Directeur
-                        break;
-        }
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonConnecter;
-    private javax.swing.JDialog dialogError;
-    private javax.swing.JLabel errorDialogText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel pannelLogin;
