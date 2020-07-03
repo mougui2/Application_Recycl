@@ -5,20 +5,25 @@
  */
 package window;
 
+import java.awt.Color;
+import javax.swing.JFrame;
+import services.EmployeServices;
+
 /**
  *
  * @author eddy.parisi
  */
 public class ForgotPassword extends javax.swing.JFrame {
+
     private int idUser;
-    
+
     /**
      * Creates new form ForgotPassword
      */
     public ForgotPassword() {
         initComponents();
     }
-    
+
     public ForgotPassword(int idUser) {
         initComponents();
         this.idUser = idUser;
@@ -33,12 +38,34 @@ public class ForgotPassword extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        erreurDialog = new javax.swing.JDialog();
+        errorDialogText = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         textfieldNewPassword = new javax.swing.JPasswordField();
         textfieldConfirmationPassword = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+
+        erreurDialog.setPreferredSize(new java.awt.Dimension(581, 77));
+        erreurDialog.setSize(new java.awt.Dimension(581, 77));
+
+        javax.swing.GroupLayout erreurDialogLayout = new javax.swing.GroupLayout(erreurDialog.getContentPane());
+        erreurDialog.getContentPane().setLayout(erreurDialogLayout);
+        erreurDialogLayout.setHorizontalGroup(
+            erreurDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(erreurDialogLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(errorDialogText, javax.swing.GroupLayout.PREFERRED_SIZE, 486, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(67, Short.MAX_VALUE))
+        );
+        erreurDialogLayout.setVerticalGroup(
+            erreurDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(erreurDialogLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(errorDialogText, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,6 +133,36 @@ public class ForgotPassword extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // changer le mot de passe avec l'id qu'on a en var global : idUser
+        //reset default parameter
+        errorDialogText.setText("");
+        textfieldNewPassword.setBackground(Color.WHITE);
+        textfieldConfirmationPassword.setBackground(Color.WHITE);
+        //check error
+        if (textfieldNewPassword.getText().equals("")) {
+            textfieldNewPassword.setBackground(Color.red);
+        }
+        if (textfieldConfirmationPassword.getText().equals("")) {
+            textfieldConfirmationPassword.setBackground(Color.red);
+        }
+        if (!textfieldNewPassword.getText().equals(textfieldConfirmationPassword.getText())) {
+            textfieldNewPassword.setBackground(Color.red);
+            textfieldConfirmationPassword.setBackground(Color.red);
+            errorDialogText.setText("Les mots de passe ne sont pas identique.");
+        } else {
+            Boolean isSaved = new EmployeServices().save(this.idUser, textfieldNewPassword.getText());
+            if (isSaved) {
+                errorDialogText.setText("");
+                textfieldNewPassword.setText("");
+                textfieldConfirmationPassword.setText("");
+                this.setVisible(false);
+            } else {
+                errorDialogText.setText("Erreur veuillez contacter l'administrateur.");
+            }
+        }
+        if (!errorDialogText.getText().equals("")){
+            erreurDialog.setVisible(true);
+        }
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -127,10 +184,11 @@ public class ForgotPassword extends javax.swing.JFrame {
     public void setIdUser(int idUser) {
         this.idUser = idUser;
     }
-    
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog erreurDialog;
+    private javax.swing.JLabel errorDialogText;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

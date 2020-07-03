@@ -59,24 +59,28 @@ public class AuthServices {
                     Gson gson = new Gson();
                     EmployeDto _loggedEmp = gson.fromJson(item.toString(), EmployeDto.class);
                     if (_loggedEmp.getTentative() >= 3) {
+                        _loggedEmp = null;
                         errorDialogText.setText("Le compte est verrouillé : Trop de tentative. Veuillez contacter votre administrateur.");
                     } else if (item.getString("motDePasse").equals(password)) {
                         _loggedEmp.setTentative(0);
-                        loggedEmp = _loggedEmp;
                     } else {
                         _loggedEmp.setTentative(_loggedEmp.getTentative() + 1);
                         errorDialogText.setText("Mot de passe erroné. Tentative restante : " + (3 - _loggedEmp.getTentative()) + ".");
                     }
+                    loggedEmp = _loggedEmp;
                     break;
                 }
             }
             if (loggedEmp == null && errorDialogText.getText().equals("")) {
                 errorDialogText.setText("Ce compte n'existe pas.");
             }
+            if (loggedEmp != null ) {
+                new EmployeServices().save(loggedEmp);
+            }
         } catch (IOException | JSONException e) {
             Logger.getLogger(AuthServices.class.getName()).log(Level.SEVERE, null, e);
         }
-
+        
         return loggedEmp;
     }
 
