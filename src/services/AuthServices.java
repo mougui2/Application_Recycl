@@ -6,6 +6,7 @@
 package services;
 
 import ModelDTO.EmployeDto;
+import ModelDTO.FonctionDto;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -63,6 +64,7 @@ public class AuthServices {
                         errorDialogText.setText("Le compte est verrouillé : Trop de tentative. Veuillez contacter votre administrateur.");
                     } else if (item.getString("motDePasse").equals(password)) {
                         _loggedEmp.setTentative(0);
+                        _loggedEmp.setFonction(new FonctionService().getByIdFonction(item.getInt("idFonction")));
                     } else {
                         _loggedEmp.setTentative(_loggedEmp.getTentative() + 1);
                         errorDialogText.setText("Mot de passe erroné. Tentative restante : " + (3 - _loggedEmp.getTentative()) + ".");
