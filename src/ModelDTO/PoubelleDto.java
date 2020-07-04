@@ -14,10 +14,10 @@ public class PoubelleDto {
     int latitude;
     int longitude;
     int tauxDeRemplissage;
-    boolean doitEtreVidee;
+    int doitEtreVidee;
     TypeDechetDto typeDechet;
 
-    public PoubelleDto(int id, int latitude, int longitude, int tauxDeRemplissage, boolean doitEtreVidee, TypeDechetDto typeDechet) {
+    public PoubelleDto(int id, int latitude, int longitude, int tauxDeRemplissage, int doitEtreVidee, TypeDechetDto typeDechet) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -59,10 +59,14 @@ public class PoubelleDto {
     }
 
     public boolean isDoitEtreVidee() {
+        return doitEtreVidee == 1;
+    }
+
+    public int getDoitEtreVidee() {
         return doitEtreVidee;
     }
 
-    public void setDoitEtreVidee(boolean doitEtreVidee) {
+    public void setDoitEtreVidee(int doitEtreVidee) {
         this.doitEtreVidee = doitEtreVidee;
     }
 
@@ -74,5 +78,8 @@ public class PoubelleDto {
         this.typeDechet = typeDechet;
     }
     
-    
+    @Override
+    public String toString() {
+        return String.format(id + " : " + typeDechet.getLibelle() + " " + tauxDeRemplissage) + "% de remplissage."; 
+    }
 }

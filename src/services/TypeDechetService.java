@@ -43,7 +43,7 @@ public class TypeDechetService {
 
         return typesDechet;
     }
-    
+
     public TypeDechetDto getOneByIdTypeDechet(int idTypeDechet) {
         try {
             String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/typedechets/" + String.valueOf(idTypeDechet)));
@@ -54,8 +54,23 @@ public class TypeDechetService {
         } catch (JSONException ex) {
             Logger.getLogger(TypeDechetService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
+    }
+
+    public TypeDechetDto getOneByLibelleTypeDechet(String libelleTypeDechet) {
+        TypeDechetDto typeDechet = null;
+        List<TypeDechetDto> typesDechet = getAll();
+        
+        for (int i = 0; i < typesDechet.size(); i++) {
+            TypeDechetDto td = typesDechet.get(i);
+            if (td.getLibelle().equals(libelleTypeDechet)){
+                typeDechet = td;
+                break;
+            }
+        }
+
+        return typeDechet;
     }
 
 }
