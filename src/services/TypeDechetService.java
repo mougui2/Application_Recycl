@@ -35,9 +35,7 @@ public class TypeDechetService {
                 TypeDechetDto typeDechet = new Gson().fromJson(item.toString(), TypeDechetDto.class);
                 typesDechet.add(typeDechet);
             }
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(FonctionService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JSONException ex) {
+        } catch (MalformedURLException | JSONException ex) {
             Logger.getLogger(TypeDechetService.class.getName()).log(Level.SEVERE, null, ex);
         }
 

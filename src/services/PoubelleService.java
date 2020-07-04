@@ -71,4 +71,19 @@ public class PoubelleService {
         return poubellesAVideeTypeDechet;
     }
 
+    public PoubelleDto getOneById(int id) {
+        PoubelleDto poubelle = null;
+        
+        try {
+            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/poubelles/" + String.valueOf(id)));
+            JSONObject json = new JSONObject(str);
+            poubelle = new Gson().fromJson(json.toString(), PoubelleDto.class);
+            poubelle.setTypeDechet(new TypeDechetService().getOneByIdTypeDechet(json.getInt("idTypeDechet")));
+        } catch (MalformedURLException | JSONException ex) {
+            Logger.getLogger(PoubelleService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                
+        return poubelle;
+    }
+    
 }

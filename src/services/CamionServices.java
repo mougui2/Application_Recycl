@@ -54,8 +54,24 @@ public class CamionServices {
                 camionsFiltred.add(camion);
             }
         }
-        
+
         return camionsFiltred;
+    }
+
+    public CamionDto getOneByIdCamion(int idCamion) {
+        CamionDto camion = null;
+
+        try {
+            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/camions/" + String.valueOf(idCamion)));
+            JSONObject json = new JSONObject(str);
+            camion = new Gson().fromJson(json.toString(), CamionDto.class);
+            camion.setTypeDechet(new TypeDechetService().getOneByIdTypeDechet(json.getInt("idTypeDechet")));
+            camion.setModele(new ModeleService().getOneByIdModele(json.getInt("idModele")));
+        } catch (MalformedURLException | JSONException ex) {
+            Logger.getLogger(CamionServices.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return camion;
     }
 
 }
