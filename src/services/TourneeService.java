@@ -3,21 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Services;
+package services;
 
 import ModelDTO.TourneeDto;
 import Tools.DataBaseTools;
 import com.google.gson.Gson;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -26,7 +22,7 @@ import org.json.JSONObject;
  */
 public class TourneeService {
 
-    public static List<TourneeDto> getTournees() {
+    public List<TourneeDto> getTournees() {
         List<TourneeDto> tourneeList = new ArrayList<TourneeDto>();
         try {
             String response = DataBaseTools.GetJsonResponse(new URL("http://51.254.38.176/tournees"));
@@ -64,6 +60,22 @@ public class TourneeService {
 
         }
         return tourneeList;
+    }
+    
+    public List<Integer> getAllIdEmploye(){
+        List<Integer> idsEmploye = new ArrayList<>();
+
+        try {
+            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/tournees"));
+            JSONArray json = new JSONArray(str);
+            for (int i = 0; i < json.length(); i++) {
+                JSONObject item = json.getJSONObject(i);
+                idsEmploye.add(item.getInt("idEmploye"));
+            }
+        } catch (MalformedURLException | JSONException ex) {
+        }
+
+        return idsEmploye;
     }
 
 }
