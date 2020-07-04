@@ -12,6 +12,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +28,7 @@ public class TourneeService {
         List<TourneeDto> tourneeList = new ArrayList<TourneeDto>();
         try {
             String response = DataBaseTools.GetJsonResponse(new URL("http://51.254.38.176/tournees"));
-            
+
             JSONArray json = new JSONArray(response.toString());
 
             Gson gson = new Gson();
@@ -61,8 +63,43 @@ public class TourneeService {
         }
         return tourneeList;
     }
-    
-    public List<Integer> getAllIdEmploye(){
+
+    public List<TourneeDto> getAll() {
+        List<TourneeDto> tournees = new ArrayList<>();
+
+        try {
+            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/tournees"));
+            JSONArray json = new JSONArray(str);
+            for (int i = 0; i < json.length(); i++) {
+                JSONObject item = json.getJSONObject(i);
+                TourneeDto tournee = new Gson().fromJson(item.toString(), TourneeDto.class);
+                tournee.setCamion(new CamionServices().getOneByIdCamion(item.getInt("idCamion")));
+                tournee.setEmploye(new EmployeServices().getOneByIdEmploye(item.getInt("idEmploye")));
+                tournee.setDetailsTourneeList(new DetailsTourneeServices().getAllByIdTournee(item.getInt("id")));
+                tournees.add(tournee);
+            }
+        } catch (MalformedURLException | JSONException ex) {
+            Logger.getLogger(TourneeService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return tournees;
+    }
+
+    public List<TourneeDto> getAllFromIdEmploye(int idEmploye) {
+        List<TourneeDto> tourneesFiltred = new ArrayList<>();
+        List<TourneeDto> tournees = getAll();
+
+        for (int i = 0; i < tournees.size(); i++) {
+            TourneeDto tournee = tournees.get(i);
+            if (tournee.getEmploye().getId() == idEmploye) {
+                tourneesFiltred.add(tournee);
+            }
+        }
+
+        return tourneesFiltred;
+    }
+
+    public List<Integer> getAllIdEmploye() {
         List<Integer> idsEmploye = new ArrayList<>();
 
         try {
@@ -73,9 +110,26 @@ public class TourneeService {
                 idsEmploye.add(item.getInt("idEmploye"));
             }
         } catch (MalformedURLException | JSONException ex) {
+            Logger.getLogger(TourneeService.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return idsEmploye;
     }
 
+    public TourneeDto getOneById(int id) {
+        TourneeDto tournee = null;
+
+        try {
+            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/tournees/" + String.valueOf(id)));
+            JSONObject json = new JSONObject(str);
+            tournee = new Gson().fromJson(json.toString(), TourneeDto.class);
+            tournee.setCamion(new CamionServices().getOneByIdCamion(json.getInt("idCamion")));
+            tournee.setEmploye(new EmployeServices().getOneByIdEmploye(json.getInt("idEmploye")));
+            tournee.setDetailsTourneeList(new DetailsTourneeServices().getAllByIdTournee(json.getInt("id")));
+        } catch (JSONException | MalformedURLException ex) {
+            Logger.getLogger(TourneeService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return tournee;
+    }
 }
