@@ -6,17 +6,22 @@
 package services;
 
 import ModelDTO.EmployeDto;
-import java.io.BufferedReader;
+import ModelDTO.TourneeDto;
+import Tools.DataBaseTools;
+import com.google.gson.Gson;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +81,50 @@ public class EmployeServices {
         }
 
         return false;
+    }
+
+    public List<EmployeDto> getAll() {
+        List<EmployeDto> employes = new ArrayList<>();
+
+        try {
+            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/employes"));
+            JSONArray json = new JSONArray(str);
+            for (int i = 0; i < json.length(); i++) {
+                JSONObject item = json.getJSONObject(i);
+                EmployeDto employe = new Gson().fromJson(item.toString(), EmployeDto.class);
+                employes.add(employe);
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(FonctionService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(TypeDechetService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return employes;
+    }
+
+    public List<EmployeDto> getAllChauffeursLibres() {
+        List<EmployeDto> employesLibre = new ArrayList<>();
+        List<EmployeDto> employes = getAll();
+        List<Integer> idsEmployeOccupés = new TourneeService().getAllIdEmploye();
+
+        for (int i = 0; i < employes.size() ; i++) {
+            EmployeDto emp = employes.get(i);
+            Boolean isOccupe = false;
+            for (int j = 0; j < idsEmployeOccupés.size(); j++) {
+                if (emp.getId() == idsEmployeOccupés.get(j)) {
+                    isOccupe = true;
+                }
+            }
+            if (!isOccupe) {
+                employesLibre.add(emp);
+            }
+        }
+        //On garde que le rôle Employe, grace à normalisation du login
+        Stream<EmployeDto> streamEmpLibre = employesLibre.stream().filter(
+                empLibre -> empLibre.getLogin().substring(0, 1).equals("E"));
+        
+        return streamEmpLibre.collect(Collectors.toList());
     }
 
 }

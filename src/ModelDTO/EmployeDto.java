@@ -128,6 +128,9 @@ public class EmployeDto {
         this.fonction = fonction;
     }
     
-    
+    @Override
+    public String toString() { 
+        return String.format(prenom + " " + nom); 
+    }
 
 }

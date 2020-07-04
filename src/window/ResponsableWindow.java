@@ -6,7 +6,7 @@
 package window;
 
 import ModelDTO.TourneeDto;
-import Services.TourneeService;
+import services.TourneeService;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public class ResponsableWindow extends javax.swing.JFrame {
      */
     public ResponsableWindow() {
         initComponents();
-        List<TourneeDto> tourneeList =  TourneeService.getTournees();
+        List<TourneeDto> tourneeList =  new TourneeService().getTournees();
         // mettre la liste triée par date dans le jtable
     }
 

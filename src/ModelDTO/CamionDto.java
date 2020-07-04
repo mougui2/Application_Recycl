@@ -43,4 +43,9 @@ public class CamionDto {
     public void setTypeDechet(TypeDechetDto typeDechet) {
         this.typeDechet = typeDechet;
     }
+    
+    @Override
+    public String toString() { 
+        return String.format(modele.getLibelle() + " " + modele.getMarque().getLibelle() + " " + typeDechet.getLibelle()); 
+    }
 }

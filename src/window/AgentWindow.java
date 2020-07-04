@@ -5,15 +5,32 @@
  */
 package window;
 
+import ModelDTO.CamionDto;
+import ModelDTO.EmployeDto;
 import ModelDTO.EntrepriseDto;
+import ModelDTO.TypeDechetDto;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import services.CamionServices;
+import services.EmployeServices;
 import services.EntrepriseService;
+import services.TypeDechetService;
 
 /**
  *
  * @author eddy.parisi
  */
 public class AgentWindow extends javax.swing.JFrame {
+
+    private List<TypeDechetDto> listTypesDechet;
+    private List<EmployeDto> listEmployesLibre;
+    private List<CamionDto> listCamions;
 
     /**
      * Creates new form AgentWindow
@@ -53,7 +70,17 @@ public class AgentWindow extends javax.swing.JFrame {
         ButtonRetour = new javax.swing.JButton();
         erreurDialog = new javax.swing.JDialog();
         errorDialogText = new javax.swing.JLabel();
-        butonAddItineraire = new javax.swing.JButton();
+        dialogTournee = new javax.swing.JDialog();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        comboboxTypesDechet = new javax.swing.JComboBox<>();
+        comboboxCamions = new javax.swing.JComboBox<>();
+        comboboxEmployes = new javax.swing.JComboBox<>();
+        buttonValiderTournee = new javax.swing.JButton();
+        buttonRetourTournee = new javax.swing.JButton();
+        butonAddTournee = new javax.swing.JButton();
         buttonAddEntreprise = new javax.swing.JButton();
 
         dialogEntreprise.setSize(new java.awt.Dimension(406, 368));
@@ -172,7 +199,8 @@ public class AgentWindow extends javax.swing.JFrame {
         );
 
         erreurDialog.setTitle("Erreur");
-        erreurDialog.setSize(new java.awt.Dimension(581, 77));
+        erreurDialog.setPreferredSize(new java.awt.Dimension(567, 140));
+        erreurDialog.setSize(new java.awt.Dimension(581, 140));
 
         javax.swing.GroupLayout erreurDialogLayout = new javax.swing.GroupLayout(erreurDialog.getContentPane());
         erreurDialog.getContentPane().setLayout(erreurDialogLayout);
@@ -191,10 +219,99 @@ public class AgentWindow extends javax.swing.JFrame {
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
+        dialogTournee.setSize(new java.awt.Dimension(406, 368));
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel10.setText("Ajouter une tournée");
+
+        jLabel11.setText("Type de déchet :");
+
+        jLabel12.setText("Camion :");
+        jLabel12.setToolTipText("");
+
+        jLabel13.setText("Employé :");
+
+        comboboxTypesDechet.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboboxTypesDechetItemStateChanged(evt);
+            }
+        });
+
+        buttonValiderTournee.setText("Valider");
+        buttonValiderTournee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonValiderTourneeActionPerformed(evt);
+            }
+        });
+
+        buttonRetourTournee.setText("Retour");
+        buttonRetourTournee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRetourTourneeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout dialogTourneeLayout = new javax.swing.GroupLayout(dialogTournee.getContentPane());
+        dialogTournee.getContentPane().setLayout(dialogTourneeLayout);
+        dialogTourneeLayout.setHorizontalGroup(
+            dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dialogTourneeLayout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(jLabel10)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogTourneeLayout.createSequentialGroup()
+                .addContainerGap(66, Short.MAX_VALUE)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel13))
+                .addGap(18, 18, 18)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(comboboxTypesDechet, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboboxCamions, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboboxEmployes, 0, 161, Short.MAX_VALUE))
+                    .addGroup(dialogTourneeLayout.createSequentialGroup()
+                        .addComponent(buttonValiderTournee)
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonRetourTournee)))
+                .addGap(80, 80, 80))
+        );
+        dialogTourneeLayout.setVerticalGroup(
+            dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dialogTourneeLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel10)
+                .addGap(30, 30, 30)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(comboboxTypesDechet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(comboboxCamions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(comboboxEmployes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonValiderTournee)
+                    .addComponent(buttonRetourTournee))
+                .addGap(75, 75, 75))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        butonAddItineraire.setText("Ajouter un itinéraire");
+        butonAddTournee.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        butonAddTournee.setText("Ajouter une tournée");
+        butonAddTournee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonAddTourneeActionPerformed(evt);
+            }
+        });
 
+        buttonAddEntreprise.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         buttonAddEntreprise.setText("Ajouter une entreprise");
         buttonAddEntreprise.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,14 +327,14 @@ public class AgentWindow extends javax.swing.JFrame {
                 .addGap(102, 102, 102)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(buttonAddEntreprise, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                    .addComponent(butonAddItineraire, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(butonAddTournee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(102, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(18, Short.MAX_VALUE)
-                .addComponent(butonAddItineraire, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(butonAddTournee, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonAddEntreprise, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
@@ -254,6 +371,49 @@ public class AgentWindow extends javax.swing.JFrame {
         reset();
         dialogEntreprise.setVisible(false);
     }//GEN-LAST:event_ButtonRetourActionPerformed
+
+    private void butonAddTourneeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAddTourneeActionPerformed
+        errorDialogText.setText("");
+        // Les types de dechet
+        listTypesDechet = new TypeDechetService().getAll();
+        Stream<String> streamType = listTypesDechet.stream().map(type -> type.getLibelle());
+        comboboxTypesDechet.setModel(new DefaultComboBoxModel(streamType.toArray()));
+        // Les employes libres
+        listEmployesLibre = new EmployeServices().getAllChauffeursLibres();
+        Stream<String> streamEmp = listEmployesLibre.stream().map(type -> type.toString());
+        if (streamEmp.count() == 0) {
+            errorDialogText.setText("Il n'y a pas d'employé de libre. Vous ne pourrez pas créer de tournée.");
+        } else {
+            comboboxEmployes.setModel(new DefaultComboBoxModel(streamEmp.toArray()));
+        }
+        // Les camions adéquat au type de déchets
+        listCamions = getCamionFromLibelleTypeDechet(comboboxTypesDechet.getItemAt(0));
+        Stream<String> streamCamion = listCamions.stream().map(camion -> camion.toString());
+        comboboxCamions.setModel(new DefaultComboBoxModel(streamCamion.toArray()));
+        
+        dialogTournee.setVisible(true);
+        if (!errorDialogText.getText().equals("")) {
+            erreurDialog.setVisible(true);
+        }
+    }//GEN-LAST:event_butonAddTourneeActionPerformed
+
+    private void buttonRetourTourneeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRetourTourneeActionPerformed
+        dialogTournee.setVisible(false);
+    }//GEN-LAST:event_buttonRetourTourneeActionPerformed
+
+    private void buttonValiderTourneeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonValiderTourneeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonValiderTourneeActionPerformed
+
+    private void comboboxTypesDechetItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboboxTypesDechetItemStateChanged
+        if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+            String libelleTypeDechet = evt.getItem().toString();
+
+            listCamions = getCamionFromLibelleTypeDechet(libelleTypeDechet);
+            Stream<String> streamCamion = listCamions.stream().map(camion -> camion.toString());
+            comboboxCamions.setModel(new DefaultComboBoxModel(streamCamion.toArray()));
+        }
+    }//GEN-LAST:event_comboboxTypesDechetItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -339,15 +499,58 @@ public class AgentWindow extends javax.swing.JFrame {
         );
     }
 
+    private List<CamionDto> getCamionFromLibelleTypeDechet(String libelle) {
+        List<TypeDechetDto> typesDechet = listTypesDechet.stream().filter(
+                type -> type.getLibelle().equals(libelle)).collect(Collectors.toList());
+        TypeDechetDto typeDechet = typesDechet.get(0);
+
+        return new CamionServices().getAllFromIdTypeDechet(typeDechet.getId());
+    }
+
+    public List<TypeDechetDto> getListTypesDechet() {
+        return listTypesDechet;
+    }
+
+    public void setListTypesDechet(List<TypeDechetDto> listTypesDechet) {
+        this.listTypesDechet = listTypesDechet;
+    }
+
+    public List<EmployeDto> getListEmployesLibre() {
+        return listEmployesLibre;
+    }
+
+    public void setListEmployesLibre(List<EmployeDto> listEmployesLibre) {
+        this.listEmployesLibre = listEmployesLibre;
+    }
+
+    public List<CamionDto> getListCamions() {
+        return listCamions;
+    }
+
+    public void setListCamions(List<CamionDto> listCamions) {
+        this.listCamions = listCamions;
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonRetour;
-    private javax.swing.JButton butonAddItineraire;
+    private javax.swing.JButton butonAddTournee;
     private javax.swing.JButton buttonAddEntreprise;
+    private javax.swing.JButton buttonRetourTournee;
     private javax.swing.JButton buttonValider;
+    private javax.swing.JButton buttonValiderTournee;
+    private javax.swing.JComboBox<String> comboboxCamions;
+    private javax.swing.JComboBox<String> comboboxEmployes;
+    private javax.swing.JComboBox<String> comboboxTypesDechet;
     private javax.swing.JDialog dialogEntreprise;
+    private javax.swing.JDialog dialogTournee;
     private javax.swing.JDialog erreurDialog;
     private javax.swing.JLabel errorDialogText;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

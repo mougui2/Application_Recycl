@@ -153,7 +153,7 @@ public class Login extends javax.swing.JFrame {
                 new ForgotPassword(employe.getId()).setVisible(true);
                 textfieldLogin.setText("");
                 textfieldPwd.setText("");
-            } else if (employe != null) {
+            } else if (employe != null && errorDialogText.getText().equals("")) {
                 goToHomePage(employe);
             }
         }
