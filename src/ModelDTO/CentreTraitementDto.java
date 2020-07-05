@@ -22,8 +22,8 @@ public class CentreTraitementDto extends CentreDto {
         this.priseEnChargeList = priseEnChargeList;
     }
   
-    public CentreTraitementDto(int id, int numAdresse, String rueADresse, int codePostal, String ville) {
-        super(id, numAdresse, rueADresse, codePostal, ville);
+    public CentreTraitementDto(int id, int numAdresse, String rueAdresse, int codePostal, String ville) {
+        super(id, numAdresse, rueAdresse, codePostal, ville);
     }
     
 }
