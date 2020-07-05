@@ -12,7 +12,7 @@ package ModelDTO;
 public class CentreDto {
     int id;
     int numAdresse;
-    String rueADresse;
+    String rueAdresse;
     int codePostal;
     String ville;
 
@@ -32,13 +32,14 @@ public class CentreDto {
         this.numAdresse = numAdresse;
     }
 
-    public String getRueADresse() {
-        return rueADresse;
+    public String getRueAdresse() {
+        return rueAdresse;
     }
 
-    public void setRueADresse(String rueADresse) {
-        this.rueADresse = rueADresse;
+    public void setRueAdresse(String rueAdresse) {
+        this.rueAdresse = rueAdresse;
     }
+    
 
     public int getCodePostal() {
         return codePostal;
@@ -59,7 +60,7 @@ public class CentreDto {
     public CentreDto(int id, int numAdresse, String rueADresse, int codePostal, String ville) {
         this.id = id;
         this.numAdresse = numAdresse;
-        this.rueADresse = rueADresse;
+        this.rueAdresse = rueADresse;
         this.codePostal = codePostal;
         this.ville = ville;
     }

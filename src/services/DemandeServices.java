@@ -56,7 +56,6 @@ public class DemandeServices {
             byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
             wr.write(postData);
-            connection.getInputStream();
             InputStream is = connection.getInputStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
             String line;
@@ -67,7 +66,7 @@ public class DemandeServices {
             }
             rd.close();
             JSONObject item = new JSONObject(response.toString());
-            _demande = new Gson().fromJson(item.toString(), DemandeDto.class);
+            _demande = getOneById(item.getInt("id"));
         } catch (MalformedURLException ex) {
             Logger.getLogger(DemandeServices.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | JSONException ex) {

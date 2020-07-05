@@ -23,6 +23,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javax.swing.text.DefaultStyledDocument.ElementSpec.ContentType;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +38,7 @@ public class DetailsTourneeServices {
         DetailsTourneeDto _detailsTournee = null;
         
         try {
-            URL url = new URL("http://hadrixserver.ddns.net:32780/demandes");
+            URL url = new URL("http://hadrixserver.ddns.net:32780/detailstournees");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded");
@@ -54,7 +55,6 @@ public class DetailsTourneeServices {
             byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
             wr.write(postData);
-            connection.getInputStream();
             InputStream is = connection.getInputStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
             String line;
@@ -66,9 +66,7 @@ public class DetailsTourneeServices {
             rd.close();
             JSONObject item = new JSONObject(response.toString());
             _detailsTournee = new Gson().fromJson(item.toString(), DetailsTourneeDto.class);
-        } catch (JSONException ex) {
-            Logger.getLogger(DetailsTourneeServices.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (JSONException | IOException ex) {
             Logger.getLogger(DetailsTourneeServices.class.getName()).log(Level.SEVERE, null, ex);
         }
 

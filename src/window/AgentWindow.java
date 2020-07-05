@@ -660,13 +660,13 @@ public class AgentWindow extends javax.swing.JFrame {
         // Ajouter dans demande
         DemandeDto demandeDto = new DemandeDto(1, remarque, new Date(), new Date(), entreprise, centre);
         demandeDto = new DemandeServices().create(demandeDto);
-        // Ajouter dans DetailsDemande puis dans DetailsTournee pour chaque idPoubelle
+        // Aour chaque idPoubelle
         DetailsDemandeServices detailsDemandeServices = new DetailsDemandeServices();
         DetailsTourneeServices detailsTourneeServices = new DetailsTourneeServices();
         for (int i = 0; i < listIdPoubellesChoisient.size(); i++) {
             int idPoubelle = listIdPoubellesChoisient.get(i);
             DetailsDemandeDto detailsDemandeDto = new DetailsDemandeDto(demandeDto.getId(), td, quantité, new PoubelleDto());
-            detailsDemandeDto = detailsDemandeServices.create(detailsDemandeDto, idPoubelle);
+            detailsDemandeServices.create(detailsDemandeDto, idPoubelle);
             DetailsTourneeDto detailsTourneeDto = new DetailsTourneeDto(tourneeDto, detailsDemandeDto, td);
             detailsTourneeServices.create(detailsTourneeDto);
         }

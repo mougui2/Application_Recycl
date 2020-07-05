@@ -32,11 +32,11 @@ import org.json.JSONObject;
  */
 public class DetailsDemandeServices {
     
-    public DetailsDemandeDto create(DetailsDemandeDto detailsDemande, int idPoubelle) {
-        DetailsDemandeDto _detailsDemande = null;
+    public int create(DetailsDemandeDto detailsDemande, int idPoubelle) {
+        int idDetailsDemande = 0;
         
         try {
-            URL url = new URL("http://hadrixserver.ddns.net:32780/demandes");
+            URL url = new URL("http://hadrixserver.ddns.net:32780/detailsdemandes");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded");
@@ -54,7 +54,6 @@ public class DetailsDemandeServices {
             byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
             wr.write(postData);
-            connection.getInputStream();
             InputStream is = connection.getInputStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
             String line;
@@ -65,14 +64,12 @@ public class DetailsDemandeServices {
             }
             rd.close();
             JSONObject item = new JSONObject(response.toString());
-            _detailsDemande = new Gson().fromJson(item.toString(), DetailsDemandeDto.class);
-        } catch (JSONException ex) {
-            Logger.getLogger(DetailsDemandeServices.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+            idDetailsDemande = item.getInt("idDemande");
+        } catch (JSONException | IOException ex) {
             Logger.getLogger(DetailsDemandeServices.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return _detailsDemande;
+        return idDetailsDemande;
     }
 
     public List<DetailsDemandeDto> getAll() {

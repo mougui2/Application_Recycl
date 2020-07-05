@@ -11,8 +11,8 @@ package ModelDTO;
  */
 public class CentreRecyclDto extends CentreDto {
     
-    public CentreRecyclDto(int id, int numAdresse, String rueADresse, int codePostal, String ville) {
-        super(id, numAdresse, rueADresse, codePostal, ville);
+    public CentreRecyclDto(int id, int numAdresse, String rueAdresse, int codePostal, String ville) {
+        super(id, numAdresse, rueAdresse, codePostal, ville);
     }
     
 }
