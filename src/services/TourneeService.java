@@ -5,13 +5,24 @@
  */
 package services;
 
+import ModelDTO.DemandeDto;
 import ModelDTO.DetailsTourneeDto;
 import ModelDTO.TourneeDto;
 import Tools.DataBaseTools;
 import com.google.gson.Gson;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +35,48 @@ import org.json.JSONObject;
  * @author morga
  */
 public class TourneeService {
+
+    public TourneeDto create(TourneeDto tournee) {
+        TourneeDto _tournee = null;
+        
+        try {
+            URL url = new URL("http://hadrixserver.ddns.net:32780/tournees");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+            connection.setRequestMethod("POST");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            String basicAuth = Base64.getEncoder().encodeToString(("admin:admin").getBytes(StandardCharsets.UTF_8));
+            connection.setRequestProperty("Authorization", "Basic " + basicAuth);
+            String urlParameters = String.valueOf(
+                    "date=" + new SimpleDateFormat("yyyy-MM-dd").format(new Date())
+                    + "&idEmploye=" + tournee.getEmploye().getId()
+                    + "&idCamion=" + tournee.getCamion().getId()
+            );
+            byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+            wr.write(postData);
+            connection.getInputStream();
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            String line;
+            StringBuilder response = new StringBuilder();
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            JSONObject item = new JSONObject(response.toString());
+            _tournee = new Gson().fromJson(item.toString(), TourneeDto.class);
+        } catch (MalformedURLException ex) { 
+            Logger.getLogger(TourneeService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | JSONException ex) {
+            Logger.getLogger(TourneeService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return _tournee;
+    }
 
     public List<TourneeDto> getTournees() {
         List<TourneeDto> tourneeList = new ArrayList<TourneeDto>();
