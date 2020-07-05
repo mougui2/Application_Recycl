@@ -93,4 +93,9 @@ public class EntrepriseDto {
     public void setContact(String contact) {
         this.contact = contact;
     }
+    
+    @Override
+    public String toString() { 
+        return String.format(numAdresse + ", " + rueAdresse + ". " + codePostal + " " + ville + "."); 
+    }
 }

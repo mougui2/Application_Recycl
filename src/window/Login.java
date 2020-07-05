@@ -135,8 +135,6 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonConnecterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConnecterActionPerformed
-        textfieldLogin.setText("A_EPAR");
-        textfieldPwd.setText("a");
         //reset default parameter
         errorDialogText.setText("");
         textfieldLogin.setBackground(Color.WHITE);
@@ -181,7 +179,7 @@ public class Login extends javax.swing.JFrame {
         this.setVisible(false);
         switch (_fonction.getLibelle()) {
                     case "Employe":
-                        //show Employe
+                        new EmployeWimdow(employe.getId()).setVisible(true);
                         break;
                     case "Responsable":
                         //show Responsable

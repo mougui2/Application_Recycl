@@ -131,8 +131,8 @@ public class EmployeServices {
         try {
             String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/employes/" + String.valueOf(idEmploye)));
             JSONObject json = new JSONObject(str);
-            employe.setFonction(new FonctionService().getByIdFonction(json.getInt("idFonction")));
             employe = new Gson().fromJson(json.toString(), EmployeDto.class);
+            employe.setFonction(new FonctionService().getByIdFonction(json.getInt("idFonction")));
         } catch (JSONException | MalformedURLException ex) {
             Logger.getLogger(EmployeServices.class.getName()).log(Level.SEVERE, null, ex);
         }

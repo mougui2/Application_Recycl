@@ -95,4 +95,9 @@ public class DemandeDto {
         this.centreRecycl = centreRecycl;
     }
     
+    @Override
+    public String toString() { 
+        return String.format(entreprise.toString() + (remarque.equals("") ? remarque : " | Remarque : " + remarque)); 
+    }
+    
 }
