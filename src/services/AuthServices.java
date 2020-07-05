@@ -31,7 +31,7 @@ public class AuthServices {
 
         try {
             // Recuperation de tous les users en JSONArray
-            URL url = new URL("http://hadrixserver.ddns.net:32780/employes");
+            URL url = new URL("http://hadrixserver.ddns.net:32780/employes?per-page=1000");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type",

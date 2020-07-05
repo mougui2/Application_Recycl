@@ -76,7 +76,7 @@ public class EmployeWimdow extends javax.swing.JFrame {
             TourneeDto tournee = listTournees.get(i);
             List<DetailsTourneeDto> listDetailsTournee = tournee.getDetailsTourneeList();
             // Affichage
-            listHTML += i == 0 ? ("<h3>-- Tournée du " + dateFormatter.format(tournee.getDate()) + " --</h3><ol>") : ("</ol><h3>-- Tournée du " + dateFormatter.format(tournee.getDate()) + " --</h3><ol>");
+            listHTML += i == 0 ? ("<h3>-- Tournée du " + dateFormatter.format(tournee.getDate()) + " | Camion : " + tournee.getCamion().toString() + " | Dechet : " + tournee.getCamion().getTypeDechet().getLibelle()+ " --</h3><ol>") : ("</ol><h3>-- Tournée du " + dateFormatter.format(tournee.getDate()) + " --</h3><ol>");
             for (int j = 0; j < listDetailsTournee.size(); j++) {
                 // Pour chaque details de tournee on va recuperer la demande
                 DetailsTourneeDto detailsTournee = listDetailsTournee.get(j);

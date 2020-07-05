@@ -26,4 +26,9 @@ public class CentreTraitementDto extends CentreDto {
         super(id, numAdresse, rueAdresse, codePostal, ville);
     }
     
+    @Override
+    public String toString() { 
+        return String.format(id + " : " + numAdresse + ", " + rueAdresse + ". " + codePostal + " " + ville + "."); 
+    }
+    
 }

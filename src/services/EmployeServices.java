@@ -86,7 +86,7 @@ public class EmployeServices {
         List<EmployeDto> employes = new ArrayList<>();
 
         try {
-            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/employes"));
+            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/employes?per-page=1000"));
             JSONArray json = new JSONArray(str);
             for (int i = 0; i < json.length(); i++) {
                 JSONObject item = json.getJSONObject(i);
