@@ -94,6 +94,10 @@ public class EntrepriseDto {
         this.contact = contact;
     }
     
+    public String getShortDecription() {
+        return String.format(raisonSociale + ", " + ville + " - " + codePostal); 
+    }
+    
     @Override
     public String toString() { 
         return String.format(numAdresse + ", " + rueAdresse + ". " + codePostal + " " + ville + "."); 

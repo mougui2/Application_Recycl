@@ -26,6 +26,9 @@ public class PoubelleDto {
         this.typeDechet = typeDechet;
     }
 
+    public PoubelleDto() {
+    }
+
     public int getId() {
         return id;
     }

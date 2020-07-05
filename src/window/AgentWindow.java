@@ -6,23 +6,32 @@
 package window;
 
 import ModelDTO.CamionDto;
+import ModelDTO.CentreRecyclDto;
+import ModelDTO.DemandeDto;
+import ModelDTO.DetailsDemandeDto;
+import ModelDTO.DetailsTourneeDto;
 import ModelDTO.EmployeDto;
 import ModelDTO.EntrepriseDto;
 import ModelDTO.PoubelleDto;
+import ModelDTO.TourneeDto;
 import ModelDTO.TypeDechetDto;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JList;
 import services.CamionServices;
+import services.CentreRecyclServices;
+import services.DemandeServices;
+import services.DetailsDemandeServices;
+import services.DetailsTourneeServices;
 import services.EmployeServices;
 import services.EntrepriseService;
 import services.PoubelleService;
+import services.TourneeService;
 import services.TypeDechetService;
 
 /**
@@ -36,6 +45,8 @@ public class AgentWindow extends javax.swing.JFrame {
     private List<CamionDto> listCamions;
     private List<PoubelleDto> listPoubelles;
     private List<Integer> listIdPoubellesChoisient;
+    private List<EntrepriseDto> listEntreprises;
+    private List<CentreRecyclDto> listCentresRecycl;
 
     /**
      * Creates new form AgentWindow
@@ -88,6 +99,14 @@ public class AgentWindow extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         ui_listPoubelles = new javax.swing.JList<>();
         ui_textfieldOrdreTournee = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        ui_comboboxRecycl = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
+        ui_comboboxEntreprise = new javax.swing.JComboBox<>();
+        jLabel16 = new javax.swing.JLabel();
+        ui_textfieldRemarque = new javax.swing.JTextField();
+        label1 = new java.awt.Label();
+        ui_textfieldQuantite = new javax.swing.JTextField();
         butonAddTournee = new javax.swing.JButton();
         buttonAddEntreprise = new javax.swing.JButton();
 
@@ -226,8 +245,8 @@ public class AgentWindow extends javax.swing.JFrame {
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
-        dialogTournee.setPreferredSize(new java.awt.Dimension(400, 450));
-        dialogTournee.setSize(new java.awt.Dimension(400, 450));
+        dialogTournee.setPreferredSize(new java.awt.Dimension(400, 575));
+        dialogTournee.setSize(new java.awt.Dimension(400, 575));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel10.setText("Ajouter une tournée");
@@ -269,6 +288,14 @@ public class AgentWindow extends javax.swing.JFrame {
 
         ui_textfieldOrdreTournee.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
 
+        jLabel14.setText("RECYCL :");
+
+        jLabel15.setText("Entreprise :");
+
+        jLabel16.setText("Remarque :");
+
+        label1.setText("Quantité :");
+
         javax.swing.GroupLayout dialogTourneeLayout = new javax.swing.GroupLayout(dialogTournee.getContentPane());
         dialogTournee.getContentPane().setLayout(dialogTourneeLayout);
         dialogTourneeLayout.setHorizontalGroup(
@@ -278,9 +305,23 @@ public class AgentWindow extends javax.swing.JFrame {
                 .addComponent(jLabel10)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogTourneeLayout.createSequentialGroup()
-                .addContainerGap(60, Short.MAX_VALUE)
-                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                .addGap(60, 60, 60)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(dialogTourneeLayout.createSequentialGroup()
+                        .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel16)
+                            .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ui_comboboxEntreprise, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ui_comboboxRecycl, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ui_textfieldRemarque)
+                            .addComponent(ui_textfieldQuantite, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                        .addComponent(ui_textfieldOrdreTournee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(dialogTourneeLayout.createSequentialGroup()
                         .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel12)
@@ -295,8 +336,7 @@ public class AgentWindow extends javax.swing.JFrame {
                             .addGroup(dialogTourneeLayout.createSequentialGroup()
                                 .addComponent(buttonValiderTournee)
                                 .addGap(18, 18, 18)
-                                .addComponent(buttonRetourTournee))))
-                    .addComponent(ui_textfieldOrdreTournee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(buttonRetourTournee)))))
                 .addGap(80, 80, 80))
         );
         dialogTourneeLayout.setVerticalGroup(
@@ -320,7 +360,23 @@ public class AgentWindow extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(ui_textfieldOrdreTournee, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(ui_comboboxRecycl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(ui_comboboxEntreprise, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(ui_textfieldRemarque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ui_textfieldQuantite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(dialogTourneeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonValiderTournee)
                     .addComponent(buttonRetourTournee))
@@ -401,6 +457,10 @@ public class AgentWindow extends javax.swing.JFrame {
     private void butonAddTourneeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAddTourneeActionPerformed
         // intialisation des variables
         listIdPoubellesChoisient = new ArrayList<>();
+        listEntreprises = new ArrayList<>();
+        listCentresRecycl = new ArrayList<>();
+        ui_textfieldRemarque.setText("");
+        ui_textfieldQuantite.setText("");
         errorDialogText.setText("");
         // Les types de dechet
         listTypesDechet = new TypeDechetService().getAll();
@@ -423,6 +483,14 @@ public class AgentWindow extends javax.swing.JFrame {
         listPoubelles = new PoubelleService().getAll_AVidee_libelleTypeDechet(comboboxTypesDechet.getItemAt(0));
         Stream<String> streamPoubelle = listPoubelles.stream().map(poubelle -> poubelle.toString());
         ui_listPoubelles.setListData(streamPoubelle.toArray(String[]::new));
+        // Les entreprises
+        listEntreprises = new EntrepriseService().getAll();
+        Stream<String> streamEntreprise = listEntreprises.stream().map(entreprise -> entreprise.getShortDecription());
+        ui_comboboxEntreprise.setModel(new DefaultComboBoxModel(streamEntreprise.toArray()));
+        // Les Centres Recycl
+        listCentresRecycl = new CentreRecyclServices().getAll();
+        Stream<String> streamCentreRecycl = listCentresRecycl.stream().map(centreRecycl -> centreRecycl.getVille());
+        ui_comboboxRecycl.setModel(new DefaultComboBoxModel(streamCentreRecycl.toArray()));
 
         dialogTournee.setVisible(true);
         if (!errorDialogText.getText().equals("")) {
@@ -435,7 +503,7 @@ public class AgentWindow extends javax.swing.JFrame {
         int indexPoubelleClicked = list.locationToIndex(evt.getPoint());
         int idPoubelle = Integer.parseInt(list.getModel().getElementAt(indexPoubelleClicked).toString().substring(0, 1));
         if (listIdPoubellesChoisient.contains(idPoubelle)) {
-            listIdPoubellesChoisient.remove((Object)idPoubelle);
+            listIdPoubellesChoisient.remove((Object) idPoubelle);
         } else {
             listIdPoubellesChoisient.add(idPoubelle);
         }
@@ -444,6 +512,11 @@ public class AgentWindow extends javax.swing.JFrame {
 
     private void buttonRetourTourneeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRetourTourneeActionPerformed
         listIdPoubellesChoisient = new ArrayList<>();
+        listEntreprises = new ArrayList<>();
+        listCentresRecycl = new ArrayList<>();
+        ui_textfieldRemarque.setText("");
+        ui_textfieldQuantite.setText("");
+        errorDialogText.setText("");
         dialogTournee.setVisible(false);
     }//GEN-LAST:event_buttonRetourTourneeActionPerformed
 
@@ -452,21 +525,35 @@ public class AgentWindow extends javax.swing.JFrame {
         String libelleTypesDechet = comboboxTypesDechet.getSelectedItem().toString();
         String stringCamion = comboboxCamions.getSelectedItem().toString();
         String stringEmploye = comboboxEmployes.getSelectedItem().toString();
+        String remarque = ui_textfieldRemarque.getText();
+        String stringEntreprise = ui_comboboxEntreprise.getSelectedItem().toString();
+        String stringRecycl = ui_comboboxRecycl.getSelectedItem().toString();
+        int quantité = Integer.parseInt(ui_textfieldQuantite.getText());
         // Recover formattedData
         TypeDechetDto td = listTypesDechet.stream().reduce(
-                null, 
+                null,
                 (_tdKepped, _td) -> _td.getLibelle().equals(libelleTypesDechet) ? _td : _tdKepped
         );
         CamionDto camion = listCamions.stream().reduce(
-                null, 
+                null,
                 (_camionKepped, _camion) -> _camion.toString().equals(stringCamion) ? _camion : _camionKepped
         );
         EmployeDto emp = listEmployesLibre.stream().reduce(
-                null, 
-                (_empKepped, _emp) -> _emp.toString().equals(stringCamion) ? _emp : _empKepped
+                null,
+                (_empKepped, _emp) -> _emp.toString().equals(stringEmploye) ? _emp : _empKepped
+        );
+        EntrepriseDto entreprise = listEntreprises.stream().reduce(
+                null,
+                (_entrepriseKepped, _entreprise) -> _entreprise.getShortDecription().equals(stringEntreprise) ? _entreprise : _entrepriseKepped
+        );
+        CentreRecyclDto centre = listCentresRecycl.stream().reduce(
+                null,
+                (_centreKepped, _centre) -> _centre.getVille().equals(stringRecycl) ? _centre : _centreKepped
         );
         // Send data
-        sendData(td, camion, emp);
+        sendData(td, camion, emp, entreprise, centre, remarque, quantité);
+        // Reset
+        dialogTournee.setVisible(false);
     }//GEN-LAST:event_buttonValiderTourneeActionPerformed
 
     private void comboboxTypesDechetItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboboxTypesDechetItemStateChanged
@@ -485,18 +572,6 @@ public class AgentWindow extends javax.swing.JFrame {
             ui_listPoubelles.setListData(streamPoubelle.toArray(String[]::new));
         }
     }//GEN-LAST:event_comboboxTypesDechetItemStateChanged
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AgentWindow().setVisible(true);
-            }
-        });
-    }
 
     private Boolean isError() {
         Boolean _isError = false;
@@ -578,10 +653,25 @@ public class AgentWindow extends javax.swing.JFrame {
         return new CamionServices().getAllFromIdTypeDechet(typeDechet.getId());
     }
 
-    private void sendData(TypeDechetDto td, CamionDto camion, EmployeDto emp) {
-        
-    } 
-    
+    private void sendData(TypeDechetDto td, CamionDto camion, EmployeDto emp, EntrepriseDto entreprise, CentreRecyclDto centre, String remarque, int quantité) {
+        // Ajouter dans tournee
+        TourneeDto tourneeDto = new TourneeDto(1, new Date(), emp, camion);
+        tourneeDto = new TourneeService().create(tourneeDto);
+        // Ajouter dans demande
+        DemandeDto demandeDto = new DemandeDto(1, remarque, new Date(), new Date(), entreprise, centre);
+        demandeDto = new DemandeServices().create(demandeDto);
+        // Ajouter dans DetailsDemande puis dans DetailsTournee pour chaque idPoubelle
+        DetailsDemandeServices detailsDemandeServices = new DetailsDemandeServices();
+        DetailsTourneeServices detailsTourneeServices = new DetailsTourneeServices();
+        for (int i = 0; i < listIdPoubellesChoisient.size(); i++) {
+            int idPoubelle = listIdPoubellesChoisient.get(i);
+            DetailsDemandeDto detailsDemandeDto = new DetailsDemandeDto(demandeDto.getId(), td, quantité, new PoubelleDto());
+            detailsDemandeDto = detailsDemandeServices.create(detailsDemandeDto, idPoubelle);
+            DetailsTourneeDto detailsTourneeDto = new DetailsTourneeDto(tourneeDto, detailsDemandeDto, td);
+            detailsTourneeServices.create(detailsTourneeDto);
+        }
+    }
+
     public List<TypeDechetDto> getListTypesDechet() {
         return listTypesDechet;
     }
@@ -642,6 +732,9 @@ public class AgentWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -651,6 +744,7 @@ public class AgentWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane2;
+    private java.awt.Label label1;
     private javax.swing.JTextField textfieldCP;
     private javax.swing.JTextField textfieldContact;
     private javax.swing.JTextField textfieldNumero;
@@ -659,7 +753,11 @@ public class AgentWindow extends javax.swing.JFrame {
     private javax.swing.JTextField textfieldSiret;
     private javax.swing.JTextField textfieldTel;
     private javax.swing.JTextField textfieldVille;
+    private javax.swing.JComboBox<String> ui_comboboxEntreprise;
+    private javax.swing.JComboBox<String> ui_comboboxRecycl;
     private javax.swing.JList<String> ui_listPoubelles;
     private javax.swing.JLabel ui_textfieldOrdreTournee;
+    private javax.swing.JTextField ui_textfieldQuantite;
+    private javax.swing.JTextField ui_textfieldRemarque;
     // End of variables declaration//GEN-END:variables
 }
