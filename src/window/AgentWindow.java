@@ -53,6 +53,7 @@ public class AgentWindow extends javax.swing.JFrame {
      */
     public AgentWindow() {
         initComponents();
+        listTypesDechet = new TypeDechetService().getAll();
     }
 
     /**
