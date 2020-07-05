@@ -5,6 +5,7 @@
  */
 package services;
 
+import ModelDTO.DetailsTourneeDto;
 import ModelDTO.TourneeDto;
 import Tools.DataBaseTools;
 import com.google.gson.Gson;
@@ -87,7 +88,23 @@ public class TourneeService {
 
     public List<TourneeDto> getAllFromIdEmploye(int idEmploye) {
         List<TourneeDto> tourneesFiltred = new ArrayList<>();
-        List<TourneeDto> tournees = getAll();
+        List<TourneeDto> tournees = new ArrayList<>();
+
+        try {
+            String str = DataBaseTools.GetJsonResponse(new URL("http://hadrixserver.ddns.net:32780/tournees"));
+            JSONArray json = new JSONArray(str);
+            for (int i = 0; i < json.length(); i++) {
+                JSONObject item = json.getJSONObject(i);
+                TourneeDto tournee = new Gson().fromJson(item.toString(), TourneeDto.class);
+                tournee.setCamion(new CamionServices().getOneByIdCamion(item.getInt("idCamion")));
+                tournee.setEmploye(new EmployeServices().getOneByIdEmploye(item.getInt("idEmploye")));
+                List<DetailsTourneeDto> temp = new DetailsTourneeServices().getAllByIdTournee(item.getInt("id"));
+                tournee.setDetailsTourneeList(temp);
+                tournees.add(tournee);
+            }
+        } catch (MalformedURLException | JSONException ex) {
+            Logger.getLogger(TourneeService.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         for (int i = 0; i < tournees.size(); i++) {
             TourneeDto tournee = tournees.get(i);
@@ -125,7 +142,7 @@ public class TourneeService {
             tournee = new Gson().fromJson(json.toString(), TourneeDto.class);
             tournee.setCamion(new CamionServices().getOneByIdCamion(json.getInt("idCamion")));
             tournee.setEmploye(new EmployeServices().getOneByIdEmploye(json.getInt("idEmploye")));
-            tournee.setDetailsTourneeList(new DetailsTourneeServices().getAllByIdTournee(json.getInt("id")));
+            //tournee.setDetailsTourneeList(new DetailsTourneeServices().getAllByIdTournee(json.getInt("id")));
         } catch (JSONException | MalformedURLException ex) {
             Logger.getLogger(TourneeService.class.getName()).log(Level.SEVERE, null, ex);
         }
